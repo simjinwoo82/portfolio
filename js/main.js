@@ -53,12 +53,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.12 });
   revealEls.forEach(el => revealObserver.observe(el));
 
-  /* ---- Expertise 퍼센트 바 애니메이션 ---- */
+  /* ---- Expertise 퍼센트 바 + 숫자 카운트업 애니메이션 ---- */
   const bars = document.querySelectorAll('.bar-fill');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animateCount(el, target, duration) {
+    if (prefersReducedMotion) { el.textContent = target + '%'; return; }
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target) + '%';
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
   const barObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.style.width = entry.target.dataset.pct + '%';
+        const pct = entry.target.dataset.pct;
+        entry.target.style.width = pct + '%';
+        const pctLabel = entry.target.closest('.exp-row')?.querySelector('.exp-row__pct');
+        if (pctLabel) animateCount(pctLabel, parseInt(pct, 10), 1100);
         barObserver.unobserve(entry.target);
       }
     });

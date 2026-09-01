@@ -169,7 +169,8 @@
   overflow: hidden;
 }
 .hero__duo-panel--judge { background: linear-gradient(160deg, #26282f, #14151c); }
-.hero__duo-panel img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.hero__duo-panel img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform .6s ease; }
+.hero__duo-panel:hover img { transform: scale(1.05); }
 .hero__duo-placeholder {
   padding: var(--space-6);
   color: var(--color-ink-soft);
@@ -183,6 +184,7 @@
 .hero__duo-panel--judge .hero__duo-placeholder { color: #9a9aa5; border-color: rgba(255,255,255,.2); }
 .hero__duo-tag {
   position: absolute;
+  z-index: 2;
   top: 16px;
   left: 16px;
   background: rgba(250, 247, 242, .92);

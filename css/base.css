@@ -57,6 +57,13 @@ section { padding: var(--space-16) 0; }
   transform: translateY(0);
 }
 
+/* 순차 등장 stagger 지연 */
+.reveal--d1 { transition-delay: .08s; }
+.reveal--d2 { transition-delay: .16s; }
+.reveal--d3 { transition-delay: .24s; }
+.reveal--d4 { transition-delay: .32s; }
+.reveal--d5 { transition-delay: .4s; }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
 }
