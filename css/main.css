@@ -119,6 +119,19 @@
   transition: transform .2s ease, background .2s ease;
 }
 .btn:hover { background: var(--color-navy-2); transform: translateY(-1px); }
+.btn--outline {
+  background: transparent;
+  color: var(--color-navy);
+  border: 2px solid var(--color-navy);
+  padding: 11px var(--space-6);
+}
+.btn--outline:hover { background: var(--color-navy); color: #fff; }
+.btn__icon { width: 18px; height: 18px; flex-shrink: 0; }
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
 
 .hero__duo-label {
   display: flex;
