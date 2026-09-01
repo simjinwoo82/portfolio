@@ -1,0 +1,60 @@
+/*
+  디자인 토큰 (CSS 커스텀 프로퍼티)
+  출처: 사용자 제공 참고 코드(portfolio_site.html)의 배색·타이포 체계를 베이스라인으로 하되,
+  피그마 최종 목업 스크린샷(최종.png, Dev Mode 대체 확인 자료)에서 픽셀 샘플링으로 재검증한
+  색상값으로 보정함(2026-09-01). 콘텐츠(퍼센트/설명 문구 등)는 portfolio_site.html 기준 유지,
+  색상만 실제 피그마 렌더링과 일치하도록 수정.
+*/
+:root {
+  /* ===== Color ===== */
+  --color-bg: #FAF7F2;           /* 페이지 기본 배경 (크림/베이지) */
+  --color-card: #FFFFFF;
+  --color-line: #E6DFD3;         /* 구분선/보더 */
+  --color-ink: #2C2A28;          /* 기본 텍스트 */
+  --color-ink-soft: #6B665D;     /* 보조 텍스트 */
+  --color-olive: #47BA78;        /* 포인트 - 그린(Expertise 배지 등, 피그마 실측) */
+  --color-rust: #A6462F;         /* 포인트 - 러스트(레시피 모달 등에서 사용) */
+  --color-gold: #C08A28;         /* 포인트 - 골드(셰프노트 강조선) */
+  --color-navy: #252436;         /* 다크 섹션 배경(테스티모니얼)/버튼 배경 — 피그마 실측 */
+  --color-navy-2: #2E2D42;       /* 다크 섹션 카드 배경 — 피그마 실측 */
+  --color-violet: #8B00FF;       /* 다크 섹션·CTA 포인트 — 피그마 실측 */
+
+  /* ===== Expertise 카테고리 스와치 (피그마 실측) ===== */
+  --color-cat-western: #4285F5;
+  --color-cat-chinese: #E8734A;
+  --color-cat-korean: #DB4A4A;
+  --color-cat-bakery: #F0B029;
+  --color-cat-barista: #6BAD7A;
+  --color-cat-management: #3D597F;
+
+  /* ===== Radius ===== */
+  --radius-lg: 18px;
+  --radius-pill: 100px;
+
+  /* ===== Layout ===== */
+  --maxw: 1080px;
+
+  /* ===== Typography =====
+     전체 서체를 Pretendard로 통일(2026-09-01, 사용자 요청) */
+  --font-heading: 'Pretendard', -apple-system, sans-serif;
+  --font-body: 'Pretendard', -apple-system, sans-serif;
+
+  --fs-display: clamp(28px, 4.2vw, 42px);
+  --fs-h2: clamp(24px, 3vw, 32px);
+  --fs-h3: 20px;
+  --fs-body: 15.5px;
+  --fs-small: 13.5px;
+  --fs-label: 12.5px;
+
+  /* ===== Spacing (8px 기반 스케일 — Dev Mode 재확인 권장) ===== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+}
