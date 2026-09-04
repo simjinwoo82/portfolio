@@ -21,10 +21,18 @@
   gap: var(--space-4);
 }
 .nav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 17px;
   white-space: nowrap;
+}
+.nav__brand-lottie {
+  width: 34px;
+  height: 34px;
+  flex: none;
 }
 .nav__links {
   display: flex;
@@ -308,6 +316,20 @@
 .quote-section__name { font-size: 16px; font-weight: 600; color: var(--color-ink-soft); }
 
 /* ==================== SIGNATURE DISHES ==================== */
+.section-head--signature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.section-head__lottie {
+  width: 108px;
+  height: 108px;
+  flex: none;
+}
+@media (max-width: 760px) {
+  .section-head__lottie { width: 72px; height: 72px; }
+}
 .dish-cat {
   font-size: 16px;
   font-weight: 600;
