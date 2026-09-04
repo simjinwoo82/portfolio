@@ -168,8 +168,15 @@
   overflow: hidden;
   box-shadow: 0 30px 60px -20px rgba(44, 42, 40, .25);
 }
+.hero__banner {
+  margin-top: var(--space-6);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -20px rgba(44, 42, 40, .25);
+}
+.hero__banner img { width: 100%; height: auto; display: block; }
 .hero__duo-panel {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 500 / 456;
   position: relative;
   display: flex;
   align-items: flex-end;
