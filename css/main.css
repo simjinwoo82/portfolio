@@ -385,7 +385,8 @@
   background: var(--color-bg);
   border-radius: 20px;
   max-width: 640px; width: 100%;
-  max-height: 88vh; overflow-y: auto;
+  max-height: 88vh; max-height: 88dvh;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
   box-shadow: 0 40px 80px -20px rgba(0, 0, 0, .4);
   animation: modal-in .3s cubic-bezier(.2,.8,.2,1);
 }
@@ -494,7 +495,7 @@
   transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
 }
 .contact-pill__icon { width: 17px; height: 17px; flex-shrink: 0; }
-.contact-pill:hover {
+.contact-pill--email:hover {
   background: var(--color-violet);
   transform: translateY(-3px);
   box-shadow: 0 12px 28px rgba(139, 0, 255, .3);
@@ -557,6 +558,38 @@
 .contact-form__status { text-align: center; font-size: var(--fs-small); color: var(--color-ink-soft); margin-top: var(--space-3); margin-bottom: 0; }
 @media (max-width: 560px) {
   .contact-form__row { flex-direction: column; gap: 0; }
+}
+
+/* ==================== 문의 모달 ==================== */
+.modal-box--contact {
+  max-height: 94vh; max-height: 94dvh;
+}
+.modal-box--contact .modal-box__body {
+  padding: var(--space-4) 22px 18px;
+}
+.modal-box--contact .modal-box__title { font-size: 19px; margin-bottom: 2px; }
+.modal-box--contact .modal-box__desc { font-size: var(--fs-small); margin-bottom: var(--space-3); }
+.modal-box--contact .contact-form {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  max-height: none;
+  opacity: 1;
+  pointer-events: auto;
+  overflow: visible;
+  transition: none;
+}
+.modal-box--contact .contact-form__group { margin-bottom: var(--space-2); }
+.modal-box--contact .contact-form__group label { margin-bottom: var(--space-1); }
+.modal-box--contact .contact-form__group input,
+.modal-box--contact .contact-form__group textarea { padding: 8px var(--space-3); }
+.modal-box--contact .contact-form__captcha { margin-bottom: var(--space-1); }
+.modal-box--contact .contact-form__status { margin-top: var(--space-2); }
+@media (max-height: 640px) {
+  .modal-box--contact .modal-box__desc { display: none; }
+  .modal-box--contact .contact-form__group { margin-bottom: var(--space-1); }
 }
 .footer-links { display: flex; gap: 22px; justify-content: center; font-size: 16px; color: var(--color-ink-soft); margin-bottom: 22px; flex-wrap: wrap; }
 .copyright { text-align: center; font-size: 16px; color: var(--color-ink-soft); padding-bottom: var(--space-5); }

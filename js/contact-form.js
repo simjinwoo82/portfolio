@@ -13,58 +13,59 @@
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    const trigger = document.getElementById('emailTrigger');
+    const overlay = document.getElementById('contactModalOverlay');
+    const closeBtn = document.getElementById('contactModalClose');
     const form = document.getElementById('contact-form');
+    const triggers = [
+      document.getElementById('navContactTrigger'),
+      document.getElementById('emailTrigger'),
+    ].filter(Boolean);
 
-    if (trigger && form) {
-      let hideTimer = null;
-      let pinned = false;
+    let lastFocusedEl = null;
+    let savedScrollY = 0;
 
-      const open = () => {
-        clearTimeout(hideTimer);
-        form.classList.add('is-visible');
-        trigger.setAttribute('aria-expanded', 'true');
-      };
-      const scheduleClose = () => {
-        clearTimeout(hideTimer);
-        hideTimer = setTimeout(() => {
-          if (pinned) return;
-          form.classList.remove('is-visible');
-          trigger.setAttribute('aria-expanded', 'false');
-        }, 220);
-      };
-      const close = () => {
-        clearTimeout(hideTimer);
-        pinned = false;
-        form.classList.remove('is-visible');
-        trigger.setAttribute('aria-expanded', 'false');
-      };
+    const openContactModal = () => {
+      if (!overlay) return;
+      lastFocusedEl = document.activeElement;
+      savedScrollY = window.scrollY;
+      overlay.classList.add('is-open');
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${savedScrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      const firstField = document.getElementById('contact-name');
+      if (firstField) firstField.focus();
+    };
 
-      trigger.addEventListener('mouseenter', open);
-      trigger.addEventListener('mouseleave', scheduleClose);
-      form.addEventListener('mouseenter', open);
-      form.addEventListener('mouseleave', scheduleClose);
-      trigger.addEventListener('focus', open);
+    const closeContactModal = () => {
+      if (!overlay || !overlay.classList.contains('is-open')) return;
+      overlay.classList.remove('is-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      window.scrollTo({ top: savedScrollY, left: 0, behavior: 'instant' });
+      if (lastFocusedEl) lastFocusedEl.focus();
+    };
 
-      trigger.addEventListener('click', () => {
-        pinned = !pinned;
-        if (pinned) {
-          open();
-        } else {
-          close();
-        }
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        openContactModal();
       });
+    });
 
-      document.addEventListener('click', (event) => {
-        if (!pinned) return;
-        if (trigger.contains(event.target) || form.contains(event.target)) return;
-        close();
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') close();
+    if (closeBtn) closeBtn.addEventListener('click', closeContactModal);
+    if (overlay) {
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) closeContactModal();
       });
     }
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeContactModal();
+    });
 
     if (typeof emailjs === 'undefined') return;
 
