@@ -499,14 +499,30 @@
   transform: translateY(-3px);
   box-shadow: 0 12px 28px rgba(139, 0, 255, .3);
 }
+.contact-pill {
+  cursor: pointer;
+}
 .contact-form {
   max-width: 520px;
-  margin: 0 auto var(--space-10);
-  padding: var(--space-6);
+  margin: 0 auto 0;
+  padding: 0 var(--space-6);
   background: var(--color-card);
-  border: 1px solid var(--color-line);
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
   text-align: left;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: max-height .4s ease, opacity .3s ease, padding .4s ease, margin .4s ease, border-color .3s ease;
+}
+.contact-form.is-visible {
+  max-height: 900px;
+  opacity: 1;
+  padding: var(--space-6);
+  margin: 0 auto var(--space-10);
+  border-color: var(--color-line);
+  pointer-events: auto;
 }
 .contact-form__row { display: flex; gap: var(--space-4); }
 .contact-form__row .contact-form__group { flex: 1; }

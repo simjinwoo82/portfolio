@@ -13,11 +13,63 @@
   };
 
   document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('emailTrigger');
+    const form = document.getElementById('contact-form');
+
+    if (trigger && form) {
+      let hideTimer = null;
+      let pinned = false;
+
+      const open = () => {
+        clearTimeout(hideTimer);
+        form.classList.add('is-visible');
+        trigger.setAttribute('aria-expanded', 'true');
+      };
+      const scheduleClose = () => {
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          if (pinned) return;
+          form.classList.remove('is-visible');
+          trigger.setAttribute('aria-expanded', 'false');
+        }, 220);
+      };
+      const close = () => {
+        clearTimeout(hideTimer);
+        pinned = false;
+        form.classList.remove('is-visible');
+        trigger.setAttribute('aria-expanded', 'false');
+      };
+
+      trigger.addEventListener('mouseenter', open);
+      trigger.addEventListener('mouseleave', scheduleClose);
+      form.addEventListener('mouseenter', open);
+      form.addEventListener('mouseleave', scheduleClose);
+      trigger.addEventListener('focus', open);
+
+      trigger.addEventListener('click', () => {
+        pinned = !pinned;
+        if (pinned) {
+          open();
+        } else {
+          close();
+        }
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!pinned) return;
+        if (trigger.contains(event.target) || form.contains(event.target)) return;
+        close();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') close();
+      });
+    }
+
     if (typeof emailjs === 'undefined') return;
 
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
-    const form = document.getElementById('contact-form');
     const status = document.getElementById('contact-status');
     if (!form || !status) return;
 
