@@ -21,6 +21,45 @@
       document.getElementById('emailTrigger'),
     ].filter(Boolean);
 
+    const phoneTrigger = document.getElementById('phoneTrigger');
+    const phoneLabel = document.getElementById('phoneTriggerLabel');
+    if (phoneTrigger && phoneLabel) {
+      const originalPhoneLabel = phoneLabel.textContent;
+      let phoneResetTimer = null;
+
+      const showPhoneCopied = () => {
+        clearTimeout(phoneResetTimer);
+        phoneLabel.textContent = '번호가 복사되었습니다';
+        phoneResetTimer = setTimeout(() => {
+          phoneLabel.textContent = originalPhoneLabel;
+        }, 1500);
+      };
+
+      const copyFallback = (text) => {
+        const input = document.createElement('textarea');
+        input.value = text;
+        input.style.position = 'fixed';
+        input.style.opacity = '0';
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+      };
+
+      phoneTrigger.addEventListener('click', () => {
+        const phone = phoneTrigger.dataset.phone;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(phone).then(showPhoneCopied).catch(() => {
+            copyFallback(phone);
+            showPhoneCopied();
+          });
+        } else {
+          copyFallback(phone);
+          showPhoneCopied();
+        }
+      });
+    }
+
     let lastFocusedEl = null;
     let savedScrollY = 0;
 
