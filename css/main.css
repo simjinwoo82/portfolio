@@ -308,7 +308,9 @@
   gap: var(--space-3);
   animation: skills-marquee-scroll 26s linear infinite;
 }
-.skills-marquee__viewport:hover .skills-marquee__track { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) {
+  .skills-marquee__viewport:hover .skills-marquee__track { animation-play-state: paused; }
+}
 @keyframes skills-marquee-scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
