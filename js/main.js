@@ -85,7 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---- 레시피 모달 ---- */
   const overlay = document.getElementById('modalOverlay');
   const modalClose = document.getElementById('modalClose');
+  const modalStamp = document.getElementById('modalStamp');
   let lastFocusedEl = null;
+  let stampTimer = null;
 
   function openModal(key) {
     const recipe = window.RECIPES[key];
@@ -107,11 +109,18 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     modalClose.focus();
+
+    clearTimeout(stampTimer);
+    modalStamp.classList.remove('is-stamped');
+    void modalStamp.offsetWidth; // force reflow so the animation restarts every open
+    stampTimer = setTimeout(() => modalStamp.classList.add('is-stamped'), 300);
   }
 
   function closeModal() {
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
+    clearTimeout(stampTimer);
+    modalStamp.classList.remove('is-stamped');
     if (lastFocusedEl) lastFocusedEl.focus();
   }
 

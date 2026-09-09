@@ -436,7 +436,29 @@
   from { opacity: 0; transform: translateY(16px) scale(.98); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-.modal-box__img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.modal-box__media { position: relative; }
+.modal-box__img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+.modal-box__stamp {
+  position: absolute;
+  right: 26px; bottom: 24px;
+  width: 116px; height: 116px;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .35));
+  transform: scale(2.8) rotate(-28deg);
+}
+.modal-box__stamp.is-stamped {
+  animation: stamp-impact .6s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+@keyframes stamp-impact {
+  0%   { opacity: 0; transform: scale(2.8) rotate(-28deg); }
+  55%  { opacity: 1; transform: scale(.82) rotate(6deg); }
+  75%  { transform: scale(1.08) rotate(-3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@media (max-width: 900px) {
+  .modal-box__stamp { width: 84px; height: 84px; right: 16px; bottom: 16px; }
+}
 .modal-box__body { padding: var(--space-6) 28px 30px; position: relative; }
 .modal-box__close {
   position: absolute; top: 14px; right: 14px;
