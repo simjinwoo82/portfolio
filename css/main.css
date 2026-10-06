@@ -416,13 +416,12 @@
 /* ==================== COOKING VIDEOS (STACK SCROLL) ==================== */
 .video-stack {
   --stack-top-base: 96px;
-  --stack-gap: 24px;
   position: relative;
   padding-bottom: var(--space-10);
 }
 .video-stack__card {
   position: sticky;
-  top: calc(var(--stack-top-base) + var(--stack-i) * var(--stack-gap));
+  top: var(--stack-top-base);
   z-index: calc(var(--stack-i) + 1);
   margin-bottom: var(--space-6);
   background: var(--color-card);
@@ -432,6 +431,7 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   box-shadow: 0 20px 40px -16px rgba(44, 42, 40, .2);
+  transform-origin: center;
 }
 .video-stack__media {
   position: relative;
@@ -442,6 +442,32 @@
   background: #EFEAE2;
 }
 .video-stack__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.video-stack__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(44, 42, 40, .55);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease, opacity .2s ease;
+}
+.video-stack__play svg { width: 22px; height: 22px; margin-left: 3px; }
+.video-stack__play:hover { background: rgba(44, 42, 40, .75); transform: scale(1.06); }
+.video-stack__card.is-playing .video-stack__play {
+  inset: auto 12px 12px auto;
+  width: 40px;
+  height: 40px;
+  opacity: .55;
+}
+.video-stack__card.is-playing .video-stack__play:hover { opacity: 1; }
+.video-stack__card.is-playing .video-stack__play svg { width: 16px; height: 16px; margin-left: 0; }
 .video-stack__info {
   padding: var(--space-6);
   display: flex;
@@ -462,7 +488,7 @@
 .video-stack__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
 
 @media (max-width: 760px) {
-  .video-stack { --stack-top-base: 80px; --stack-gap: 12px; }
+  .video-stack { --stack-top-base: 80px; }
   .video-stack__card { grid-template-columns: 1fr; }
   .video-stack__media { max-width: 280px; max-height: 65vh; }
   .video-stack__info { padding: var(--space-5); }

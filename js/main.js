@@ -172,28 +172,29 @@ document.addEventListener('DOMContentLoaded', () => {
   if (videoStack) {
     const stackCards = [...videoStack.querySelectorAll('.video-stack__card')];
 
-    function stackGap() {
-      return parseFloat(getComputedStyle(videoStack).getPropertyValue('--stack-gap')) || 24;
-    }
-
     let stackTicking = false;
     function updateStackEffect() {
-      const gap = stackGap();
+      const n = stackCards.length;
+      const rects = stackCards.map(c => c.getBoundingClientRect());
+
+      // progress[i]: 0~1, i+1번 카드가 i번 카드를 얼마나 덮었는지(같은 top에 도달하면 1)
+      const progress = new Array(n).fill(0);
+      for (let i = 0; i < n - 1; i++) {
+        const cardHeight = rects[i].height || 1;
+        const delta = rects[i + 1].top - rects[i].top;
+        progress[i] = Math.min(Math.max((cardHeight - delta) / cardHeight, 0), 1);
+      }
+
+      // depth[i]: i번 카드가 쌓인 깊이(0=맨 위). 뒤 카드의 깊이를 이어받아 누적된다.
+      const depth = new Array(n).fill(0);
+      for (let i = n - 2; i >= 0; i--) {
+        depth[i] = progress[i] * (1 + depth[i + 1]);
+      }
+
       stackCards.forEach((card, i) => {
-        const next = stackCards[i + 1];
-        if (!next) {
-          card.style.transform = '';
-          card.style.filter = '';
-          return;
-        }
-        const cardRect = card.getBoundingClientRect();
-        const nextRect = next.getBoundingClientRect();
-        const delta = nextRect.top - cardRect.top;
-        const cardHeight = cardRect.height || 1;
-        const range = Math.max(cardHeight - gap, 1);
-        const progress = Math.min(Math.max((cardHeight - delta) / range, 0), 1);
-        card.style.transform = `scale(${(1 - progress * 0.05).toFixed(3)})`;
-        card.style.filter = `brightness(${(1 - progress * 0.18).toFixed(3)})`;
+        const scale = 1 - depth[i] * 0.05;
+        card.style.transform = `scale(${scale.toFixed(3)})`;
+        card.style.filter = `brightness(${(1 - progress[i] * 0.18).toFixed(3)})`;
       });
       stackTicking = false;
     }
@@ -207,17 +208,43 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', onStackScroll);
     updateStackEffect();
 
-    const stackVideos = videoStack.querySelectorAll('.video-stack__video');
-    const stackVideoObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const video = entry.target;
-        if (entry.isIntersecting) {
+    const PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+    const stackVideos = [];
+
+    stackCards.forEach(card => {
+      const video = card.querySelector('.video-stack__video');
+      const playBtn = card.querySelector('.video-stack__play');
+      const playIcon = playBtn.innerHTML;
+      const playLabel = playBtn.getAttribute('aria-label');
+      const pauseLabel = playLabel.replace('재생', '일시정지');
+      stackVideos.push(video);
+
+      playBtn.addEventListener('click', () => {
+        if (video.paused) {
           video.play().catch(() => {});
         } else {
           video.pause();
         }
       });
-    }, { threshold: 0.35 });
+      video.addEventListener('play', () => {
+        card.classList.add('is-playing');
+        playBtn.innerHTML = PAUSE_ICON;
+        playBtn.setAttribute('aria-label', pauseLabel);
+        // 한 번에 하나만 재생: 다른 카드 영상은 전부 정지(소리 겹침 방지)
+        stackVideos.forEach(v => { if (v !== video && !v.paused) v.pause(); });
+      });
+      video.addEventListener('pause', () => {
+        card.classList.remove('is-playing');
+        playBtn.innerHTML = playIcon;
+        playBtn.setAttribute('aria-label', playLabel);
+      });
+    });
+
+    const stackVideoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) entry.target.pause();
+      });
+    }, { threshold: 0.1 });
     stackVideos.forEach(v => stackVideoObserver.observe(v));
   }
 });
