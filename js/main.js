@@ -166,4 +166,58 @@ document.addEventListener('DOMContentLoaded', () => {
       resizeTimer = setTimeout(equalizeTestiCardHeights, 150);
     });
   }
+
+  /* ---- 요리 영상 스택 스크롤 ---- */
+  const videoStack = document.querySelector('.video-stack');
+  if (videoStack) {
+    const stackCards = [...videoStack.querySelectorAll('.video-stack__card')];
+
+    function stackGap() {
+      return parseFloat(getComputedStyle(videoStack).getPropertyValue('--stack-gap')) || 24;
+    }
+
+    let stackTicking = false;
+    function updateStackEffect() {
+      const gap = stackGap();
+      stackCards.forEach((card, i) => {
+        const next = stackCards[i + 1];
+        if (!next) {
+          card.style.transform = '';
+          card.style.filter = '';
+          return;
+        }
+        const cardRect = card.getBoundingClientRect();
+        const nextRect = next.getBoundingClientRect();
+        const delta = nextRect.top - cardRect.top;
+        const cardHeight = cardRect.height || 1;
+        const range = Math.max(cardHeight - gap, 1);
+        const progress = Math.min(Math.max((cardHeight - delta) / range, 0), 1);
+        card.style.transform = `scale(${(1 - progress * 0.05).toFixed(3)})`;
+        card.style.filter = `brightness(${(1 - progress * 0.18).toFixed(3)})`;
+      });
+      stackTicking = false;
+    }
+    function onStackScroll() {
+      if (!stackTicking) {
+        stackTicking = true;
+        requestAnimationFrame(updateStackEffect);
+      }
+    }
+    window.addEventListener('scroll', onStackScroll, { passive: true });
+    window.addEventListener('resize', onStackScroll);
+    updateStackEffect();
+
+    const stackVideos = videoStack.querySelectorAll('.video-stack__video');
+    const stackVideoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.35 });
+    stackVideos.forEach(v => stackVideoObserver.observe(v));
+  }
 });
