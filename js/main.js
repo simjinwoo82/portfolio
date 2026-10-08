@@ -185,16 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
         progress[i] = Math.min(Math.max((cardHeight - delta) / cardHeight, 0), 1);
       }
 
-      // depth[i]: i번 카드가 쌓인 깊이(0=맨 위). 뒤 카드의 깊이를 이어받아 누적된다.
-      const depth = new Array(n).fill(0);
-      for (let i = n - 2; i >= 0; i--) {
-        depth[i] = progress[i] * (1 + depth[i + 1]);
-      }
-
       stackCards.forEach((card, i) => {
-        const scale = 1 - depth[i] * 0.05;
-        card.style.transform = `scale(${scale.toFixed(3)})`;
-        card.style.filter = `brightness(${(1 - progress[i] * 0.18).toFixed(3)})`;
+        // 다음 슬라이드가 덮기 시작하면 현재 슬라이드 영상은 정지
+        if (progress[i] > 0.15) {
+          card.querySelectorAll('.video-stack__video').forEach(v => { if (!v.paused) v.pause(); });
+        }
       });
       stackTicking = false;
     }
@@ -211,9 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
     const stackVideos = [];
 
-    stackCards.forEach(card => {
-      const video = card.querySelector('.video-stack__video');
-      const playBtn = card.querySelector('.video-stack__play');
+    const stackMediaBoxes = [...videoStack.querySelectorAll('.video-stack__media')];
+    stackMediaBoxes.forEach(media => {
+      const video = media.querySelector('.video-stack__video');
+      const playBtn = media.querySelector('.video-stack__play');
       const playIcon = playBtn.innerHTML;
       const playLabel = playBtn.getAttribute('aria-label');
       const pauseLabel = playLabel.replace('재생', '일시정지');
@@ -227,14 +223,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
       video.addEventListener('play', () => {
-        card.classList.add('is-playing');
+        media.classList.add('is-playing');
         playBtn.innerHTML = PAUSE_ICON;
         playBtn.setAttribute('aria-label', pauseLabel);
-        // 한 번에 하나만 재생: 다른 카드 영상은 전부 정지(소리 겹침 방지)
+        // 한 번에 하나만 재생: 다른 영상은 전부 정지(소리 겹침 방지)
         stackVideos.forEach(v => { if (v !== video && !v.paused) v.pause(); });
       });
       video.addEventListener('pause', () => {
-        card.classList.remove('is-playing');
+        media.classList.remove('is-playing');
         playBtn.innerHTML = playIcon;
         playBtn.setAttribute('aria-label', playLabel);
       });
